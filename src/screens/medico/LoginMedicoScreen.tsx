@@ -13,16 +13,17 @@ import {
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/types";
 import { buscarMedicoPorCrm } from "../../services/medicoService";
- 
+import { mensagemErroApi } from "../../utils/apiErro";
+
 type Props = {
  navigation: NativeStackNavigationProp<RootStackParamList, "LoginMedico">;
 };
- 
+
 export default function LoginMedicoScreen({ navigation }: Props) {
  const [crm, setCrm] = useState("");
  const [carregando, setCarregando] = useState(false);
  const [erro, setErro] = useState("");
- 
+
  async function handleEntrar() {
  const crmLimpo = crm.trim().toUpperCase();
  if (!crmLimpo) {
@@ -44,13 +45,13 @@ export default function LoginMedicoScreen({ navigation }: Props) {
  medicoNome: medico.nome,
  });
  }
- } catch {
- setErro("CRM nao encontrado. Verifique e tente novamente.");
+ } catch (e) {
+ setErro(mensagemErroApi(e, "CRM nao encontrado. Verifique e tente novamente."));
  } finally {
  setCarregando(false);
  }
  }
- 
+
  return (
  <KeyboardAvoidingView
  style={styles.container}
@@ -64,7 +65,7 @@ export default function LoginMedicoScreen({ navigation }: Props) {
  <Text style={styles.subtitulo}>
  Digite seu CRM para acessar suas consultas
  </Text>
- 
+
  <View style={styles.formulario}>
  <Text style={styles.label}>CRM</Text>
  <TextInput
@@ -77,9 +78,9 @@ export default function LoginMedicoScreen({ navigation }: Props) {
  setErro("");
  }}
  />
- 
+
  {erro !== "" && <Text style={styles.erroTexto}>{erro}</Text>}
- 
+
  <TouchableOpacity
  style={[styles.botao, carregando && styles.botaoDesabilitado]}
  onPress={handleEntrar}
@@ -91,13 +92,13 @@ export default function LoginMedicoScreen({ navigation }: Props) {
  <Text style={styles.botaoTexto}>Entrar</Text>
  )}
  </TouchableOpacity>
- 
+
  <View style={styles.separador}>
  <View style={styles.linha} />
  <Text style={styles.separadorTexto}>ou</Text>
  <View style={styles.linha} />
  </View>
- 
+
  <TouchableOpacity
  style={styles.botaoSecundario}
  onPress={() => navigation.navigate("CadastroMedico")}
@@ -111,7 +112,7 @@ export default function LoginMedicoScreen({ navigation }: Props) {
  </KeyboardAvoidingView>
  );
 }
- 
+
 const styles = StyleSheet.create({
  container: { flex: 1, backgroundColor: "#79059C" },
  content: { flexGrow: 1, justifyContent: "center", padding: 24 },
@@ -179,4 +180,4 @@ const styles = StyleSheet.create({
  fontSize: 15,
  },
 });
- 
+

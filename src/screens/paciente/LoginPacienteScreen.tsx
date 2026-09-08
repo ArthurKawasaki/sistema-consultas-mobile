@@ -13,16 +13,17 @@ import {
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/types";
 import { buscarPacientePorCpf } from "../../services/pacienteService";
- 
+import { mensagemErroApi } from "../../utils/apiErro";
+
 type Props = {
  navigation: NativeStackNavigationProp<RootStackParamList, "LoginPaciente">;
 };
- 
+
 export default function LoginPacienteScreen({ navigation }: Props) {
  const [cpf, setCpf] = useState("");
  const [carregando, setCarregando] = useState(false);
  const [erro, setErro] = useState("");
- 
+
  async function handleEntrar() {
  const cpfLimpo = cpf.replace(/\D/g, "");
  if (cpfLimpo.length !== 11) {
@@ -37,13 +38,13 @@ export default function LoginPacienteScreen({ navigation }: Props) {
  pacienteId: paciente.id,
  pacienteNome: paciente.nome,
  });
- } catch {
- setErro("CPF nao encontrado. Verifique ou crie um cadastro.");
+ } catch (e) {
+ setErro(mensagemErroApi(e, "CPF nao encontrado. Verifique ou crie um cadastro."));
  } finally {
  setCarregando(false);
  }
  }
- 
+
  return (
  <KeyboardAvoidingView
  style={styles.container}
@@ -57,7 +58,7 @@ export default function LoginPacienteScreen({ navigation }: Props) {
  <Text style={styles.subtitulo}>
  Digite seu CPF para acessar suas consultas
  </Text>
- 
+
  <View style={styles.formulario}>
  <Text style={styles.label}>CPF (somente numeros)</Text>
  <TextInput
@@ -71,9 +72,9 @@ export default function LoginPacienteScreen({ navigation }: Props) {
  setErro("");
  }}
  />
- 
+
  {erro !== "" && <Text style={styles.erroTexto}>{erro}</Text>}
- 
+
  <TouchableOpacity
  style={[styles.botao, carregando && styles.botaoDesabilitado]}
  onPress={handleEntrar}
@@ -85,13 +86,13 @@ export default function LoginPacienteScreen({ navigation }: Props) {
  <Text style={styles.botaoTexto}>Entrar</Text>
  )}
  </TouchableOpacity>
- 
+
  <View style={styles.separador}>
  <View style={styles.linha} />
  <Text style={styles.separadorTexto}>ou</Text>
  <View style={styles.linha} />
  </View>
- 
+
  <TouchableOpacity
  style={styles.botaoSecundario}
  onPress={() => navigation.navigate("CadastroPaciente")}
@@ -105,7 +106,7 @@ export default function LoginPacienteScreen({ navigation }: Props) {
  </KeyboardAvoidingView>
  );
 }
- 
+
 const styles = StyleSheet.create({
  container: { flex: 1, backgroundColor: "#79059C" },
  content: { flexGrow: 1, justifyContent: "center", padding: 24 },
@@ -173,4 +174,4 @@ const styles = StyleSheet.create({
  fontSize: 14,
  },
 });
- 
+

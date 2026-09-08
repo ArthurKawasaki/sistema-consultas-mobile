@@ -14,11 +14,11 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../navigation/types";
 import { cadastrarPaciente } from "../../services/pacienteService";
 import { mensagemErroApi } from "../../utils/apiErro";
- 
+
 type Props = {
  navigation: NativeStackNavigationProp<RootStackParamList, "CadastroPaciente">;
 };
- 
+
 export default function CadastroPacienteScreen({ navigation }: Props) {
  const [nome, setNome] = useState("");
  const [cpf, setCpf] = useState("");
@@ -26,7 +26,7 @@ export default function CadastroPacienteScreen({ navigation }: Props) {
  const [telefone, setTelefone] = useState("");
  const [salvando, setSalvando] = useState(false);
  const [erro, setErro] = useState("");
- 
+
  async function handleCadastrar() {
  if (!nome.trim() || !cpf.trim() || !email.trim()) {
  setErro("Preencha os campos obrigatorios: nome, CPF e e-mail.");
@@ -56,7 +56,7 @@ export default function CadastroPacienteScreen({ navigation }: Props) {
  setSalvando(false);
  }
  }
- 
+
  return (
  <KeyboardAvoidingView
  style={styles.container}
@@ -70,7 +70,7 @@ export default function CadastroPacienteScreen({ navigation }: Props) {
  <Text style={styles.subtitulo}>
  Preencha seus dados para se cadastrar
  </Text>
- 
+
  <View style={styles.formulario}>
  <Text style={styles.label}>Nome completo *</Text>
  <TextInput
@@ -79,7 +79,7 @@ export default function CadastroPacienteScreen({ navigation }: Props) {
  value={nome}
  onChangeText={setNome}
  />
- 
+
  <Text style={styles.label}>CPF * (somente numeros)</Text>
  <TextInput
  style={styles.input}
@@ -89,7 +89,7 @@ export default function CadastroPacienteScreen({ navigation }: Props) {
  value={cpf}
  onChangeText={(text) => setCpf(text.replace(/\D/g, ""))}
  />
- 
+
  <Text style={styles.label}>E-mail *</Text>
  <TextInput
  style={styles.input}
@@ -99,7 +99,7 @@ export default function CadastroPacienteScreen({ navigation }: Props) {
  value={email}
  onChangeText={setEmail}
  />
- 
+
  <Text style={styles.label}>Telefone (opcional)</Text>
  <TextInput
  style={styles.input}
@@ -108,9 +108,9 @@ export default function CadastroPacienteScreen({ navigation }: Props) {
  value={telefone}
  onChangeText={setTelefone}
  />
- 
+
  {erro !== "" && <Text style={styles.erroTexto}>{erro}</Text>}
- 
+
  <TouchableOpacity
  style={[styles.botao, salvando && styles.botaoDesabilitado]}
  onPress={handleCadastrar}
@@ -127,7 +127,7 @@ export default function CadastroPacienteScreen({ navigation }: Props) {
  </KeyboardAvoidingView>
  );
 }
- 
+
 const styles = StyleSheet.create({
  container: { flex: 1, backgroundColor: "#79059C" },
  content: { flexGrow: 1, justifyContent: "center", padding: 24 },
@@ -175,4 +175,4 @@ const styles = StyleSheet.create({
  botaoDesabilitado: { opacity: 0.6 },
  botaoTexto: { color: "#fff", fontWeight: "bold", fontSize: 16 },
 });
- 
+

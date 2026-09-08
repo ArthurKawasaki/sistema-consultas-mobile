@@ -15,11 +15,12 @@ import { RootStackParamList } from "../../navigation/types";
 import { cadastrarMedico } from "../../services/medicoService";
 import { listarEspecialidades } from "../../services/especialidadeService";
 import { Especialidade } from "../../types/especialidade";
- 
+import { mensagemErroApi } from "../../utils/apiErro";
+
 type Props = {
  navigation: NativeStackNavigationProp<RootStackParamList, "CadastroMedico">;
 };
- 
+
 export default function CadastroMedicoScreen({ navigation }: Props) {
  const [nome, setNome] = useState("");
  const [crm, setCrm] = useState("");
@@ -30,17 +31,17 @@ export default function CadastroMedicoScreen({ navigation }: Props) {
  const [mostrarEspecialidades, setMostrarEspecialidades] = useState(false);
  const [salvando, setSalvando] = useState(false);
  const [erro, setErro] = useState("");
- 
+
  useEffect(() => {
  listarEspecialidades().then(setEspecialidades);
  }, []);
- 
+
  async function handleCadastrar() {
  if (!nome.trim() || !crm.trim() || !especialidadeSelecionada) {
  setErro("Preencha os campos obrigatorios: nome, CRM e especialidade.");
  return;
  }
- 
+
  let valorNum: number | null = null;
  if (valor.trim()) {
  valorNum = parseFloat(valor.replace(",", "."));
@@ -49,7 +50,7 @@ export default function CadastroMedicoScreen({ navigation }: Props) {
  return;
  }
  }
- 
+
  try {
  setSalvando(true);
  setErro("");
@@ -71,13 +72,13 @@ export default function CadastroMedicoScreen({ navigation }: Props) {
  medicoNome: medico.nome,
  });
  }
- } catch {
- setErro("Erro ao cadastrar. CRM ja pode estar em uso.");
+ } catch (e) {
+ setErro(mensagemErroApi(e, "Erro ao cadastrar. CRM ja pode estar em uso."));
  } finally {
  setSalvando(false);
  }
  }
- 
+
  return (
  <KeyboardAvoidingView
  style={styles.container}
@@ -91,7 +92,7 @@ export default function CadastroMedicoScreen({ navigation }: Props) {
  <Text style={styles.subtitulo}>
  Preencha seus dados para criar sua conta
  </Text>
- 
+
  <View style={styles.formulario}>
  {/* Nome */}
  <Text style={styles.label}>Nome completo * (inclua Dr. ou Dra.)</Text>
@@ -101,7 +102,7 @@ export default function CadastroMedicoScreen({ navigation }: Props) {
  value={nome}
  onChangeText={setNome}
  />
- 
+
  {/* CRM */}
  <Text style={styles.label}>CRM * (somente numeros)</Text>
  <TextInput
@@ -111,7 +112,7 @@ export default function CadastroMedicoScreen({ navigation }: Props) {
  value={crm}
  onChangeText={(text) => setCrm(text.replace(/\D/g, ""))}
  />
- 
+
  {/* Especialidade */}
  <Text style={styles.label}>Especialidade *</Text>
  <TouchableOpacity
@@ -136,7 +137,7 @@ export default function CadastroMedicoScreen({ navigation }: Props) {
  {mostrarEspecialidades ? "▲" : "▼"}
  </Text>
  </TouchableOpacity>
- 
+
  {mostrarEspecialidades && (
  <View style={styles.listaEspecialidades}>
  {especialidades.map((esp) => (
@@ -165,7 +166,7 @@ export default function CadastroMedicoScreen({ navigation }: Props) {
  ))}
  </View>
  )}
- 
+
  {/* Valor */}
  <Text style={[styles.label, { marginTop: 16 }]}>
  Valor da Consulta (opcional)
@@ -180,9 +181,9 @@ export default function CadastroMedicoScreen({ navigation }: Props) {
  <Text style={styles.hint}>
  Pode ser preenchido agora ou depois no seu perfil.
  </Text>
- 
+
  {erro !== "" && <Text style={styles.erroTexto}>{erro}</Text>}
- 
+
  <TouchableOpacity
  style={[styles.botao, salvando && styles.botaoDesabilitado]}
  onPress={handleCadastrar}
@@ -199,7 +200,7 @@ export default function CadastroMedicoScreen({ navigation }: Props) {
  </KeyboardAvoidingView>
  );
 }
- 
+
 const styles = StyleSheet.create({
  container: { flex: 1, backgroundColor: "#79059C" },
  content: { flexGrow: 1, justifyContent: "center", padding: 24 },
@@ -286,4 +287,4 @@ const styles = StyleSheet.create({
  botaoDesabilitado: { opacity: 0.6 },
  botaoTexto: { color: "#fff", fontWeight: "bold", fontSize: 16 },
 });
- 
+
